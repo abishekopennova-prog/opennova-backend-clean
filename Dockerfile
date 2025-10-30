@@ -1,21 +1,24 @@
-# Use OpenJDK 21 as base image
-FROM openjdk:21-jdk-slim
+# Use Maven image to build the application
+FROM maven:3.9.4-openjdk-21-slim AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw mvnw.cmd pom.xml ./
-COPY .mvn ./.mvn
-
-# Copy source code
+# Copy pom.xml and source code
+COPY pom.xml .
 COPY src ./src
 
-# Make mvnw executable
-RUN chmod +x ./mvnw
-
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
+
+# Use OpenJDK runtime image
+FROM openjdk:21-jre-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy the built jar from build stage
+COPY --from=build /app/target/opennova-0.0.1-SNAPSHOT.jar app.jar
 
 # Create uploads directory
 RUN mkdir -p uploads/menu-images uploads/profile-images uploads/payment-screenshots
@@ -24,4 +27,4 @@ RUN mkdir -p uploads/menu-images uploads/profile-images uploads/payment-screensh
 EXPOSE 10000
 
 # Run the application
-CMD ["java", "-jar", "target/opennova-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]
