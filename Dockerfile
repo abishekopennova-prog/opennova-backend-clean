@@ -1,5 +1,8 @@
-# Use Maven image to build the application
-FROM maven:3.9-openjdk-21 AS build
+# Use Eclipse Temurin Maven image to build the application
+FROM eclipse-temurin:17-jdk AS build
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
 # Set working directory
 WORKDIR /app
@@ -11,8 +14,8 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
-# Use OpenJDK runtime image
-FROM openjdk:21-jre-slim
+# Use Eclipse Temurin runtime image
+FROM eclipse-temurin:17-jre
 
 # Set working directory
 WORKDIR /app
