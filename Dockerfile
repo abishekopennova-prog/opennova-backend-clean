@@ -21,7 +21,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # Copy the built jar from build stage
-COPY --from=build /app/target/opennova-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/opennova-backend-1.0.0.jar app.jar
 
 # Create uploads directory
 RUN mkdir -p uploads/menu-images uploads/profile-images uploads/payment-screenshots
