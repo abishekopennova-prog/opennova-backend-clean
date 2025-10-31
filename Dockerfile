@@ -27,7 +27,7 @@ COPY --from=build /app/target/opennova-backend-1.0.0.jar app.jar
 RUN mkdir -p uploads/menu-images uploads/profile-images uploads/payment-screenshots
 
 # Expose port
-EXPOSE 10000
+EXPOSE 9000
 
 # Run the application
 CMD ["java", "-jar", "app.jar"]
